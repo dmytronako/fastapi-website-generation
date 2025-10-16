@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 
-router = APIRouter(tags=['Generate Site'])
+router = APIRouter()
 
 
 @router.post('/')
@@ -10,8 +10,8 @@ async def generate() -> str:
 
 
 @router.get('/site/{site_id}')
-async def site() -> str:
-    return 'site id'
+async def site(site_id: str) -> str:
+    return site_id
 
 
 @router.get('/logs')
