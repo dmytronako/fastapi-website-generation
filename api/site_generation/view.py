@@ -1,5 +1,6 @@
+from uuid import UUID
 from fastapi import APIRouter
-from site_generation.models import GenerateBody, GenerateResponse
+from site_generation.models import GenerateBody, GenerateResponse, LogsResponse
 
 
 router = APIRouter()
@@ -11,10 +12,10 @@ async def generate(payload: GenerateBody) -> str:
 
 
 @router.get('/site/{site_id}')
-async def site(site_id: str) -> str:
+async def site(site_id: UUID) -> UUID:
     return site_id
 
 
-@router.get('/logs')
-async def logs() -> str:
+@router.get('/logs', response_model=LogsResponse)
+async def logs(offset: int) -> str:
     return 'logs'
