@@ -53,6 +53,7 @@ class Generate(Base):
     style: Mapped[str] = mapped_column(VARCHAR(1024), nullable=False)
     max_tokens: Mapped[int] = mapped_column(Integer, nullable=False)
     pages_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    sites: Mapped[list[Site]] = relationship('Site', back_populates='generate', uselist=True)
     
     
 class Site(Base):
@@ -61,3 +62,5 @@ class Site(Base):
     id: Mapped[UUID] = mapped_column(SQLAlchemyUUID, primary_key=True)
     status: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
     html: Mapped[str] = mapped_column(Text, nullable=True)
+    generate_id: Mapped[UUID] = mapped_column(SQLAlchemyUUID, ForeignKey('generate.id'))
+    generate: Mapped[Generate] = relationship('Generate', back_populates='sites')
