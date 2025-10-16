@@ -1,11 +1,12 @@
 from fastapi import APIRouter
+from site_generation.models import GenerateBody, GenerateResponse
 
 
 router = APIRouter()
 
 
-@router.post('/')
-async def generate() -> str:
+@router.post('/generate', response_model=GenerateResponse)
+async def generate(payload: GenerateBody) -> str:
     return 'generate'
 
 
