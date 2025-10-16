@@ -214,3 +214,5 @@ components.d.ts
 
 # Pyright
 pyrightconfig.json
+
+outlines.md
