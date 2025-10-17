@@ -8,3 +8,14 @@ services:
     ports:
       - '8000:8000'
     restart: "no"
+  database:
+    image: 'postgres:latest'
+    ports:
+      - 15432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data/
+      - init-db:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  db-data:
+  init-db:
