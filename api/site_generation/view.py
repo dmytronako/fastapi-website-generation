@@ -1,21 +1,31 @@
 from uuid import UUID
 from fastapi import APIRouter
-from site_generation.models import GenerateBody, GenerateResponse, LogsResponse
-
+from site_generation.models import (
+    GenerateBodyModel, GenerateResponseModel, LogsResponseModel
+)
+from database.core import AsyncDBSession
+from site_generation.service import create_generate_request
+from site_generation.ai.titles import generate_titles
 
 router = APIRouter()
 
 
-@router.post('/generate', response_model=GenerateResponse)
-async def generate(payload: GenerateBody) -> str:
-    return 'generate'
+@router.post('/generate', response_model=GenerateResponseModel)
+async def generate(
+    payload: GenerateBodyModel, async_db_session: AsyncDBSession
+) -> str:
+    # Put request into DB
+    await create_generate_request(payload, async_db_session=async_db_session)
+    titles = await generate_titles(
+        payload.topic, payload.style, payload.pages_count, retry=3
+    )
 
 
 @router.get('/site/{site_id}')
-async def site(site_id: UUID) -> UUID:
+async def site(site_id: UUID, async_db_session: AsyncDBSession) -> UUID:
     return site_id
 
 
-@router.get('/logs', response_model=LogsResponse)
-async def logs(offset: int) -> str:
+@router.get('/logs', response_model=LogsResponseModel)
+async def logs(offset: int, async_db_session: AsyncDBSession) -> str:
     return 'logs'

@@ -1,6 +1,10 @@
 from __future__ import annotations
 from pydantic import BaseModel, Field
-from sqlalchemy import Column, Integer, ForeignKey, Text, DATETIME, String, VARCHAR, UUID as SQLAlchemyUUID
+from sqlalchemy import (
+    Column, Integer, ForeignKey, Text, DATETIME, String,
+    VARCHAR, UUID as SQLAlchemyUUID
+)
+from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid import UUID
 import datetime
@@ -40,7 +44,7 @@ class LogsResponseModel(BaseModel):
     offset: int = Field(..., ge=1)  # How many last responses will be returned 
     requests: list[RequestMetadataModel]
     
-    
+
 # SQLAlchemy Models
 # Having two tables
 # 1. Generate for general requests handling
@@ -48,18 +52,19 @@ class LogsResponseModel(BaseModel):
 class Generate(Base):
     __tablename__ = 'generate'
     
-    id: Mapped[UUID] = mapped_column(SQLAlchemyUUID, primary_key=True)
+    id: Mapped[UUID] = mapped_column(SQLAlchemyUUID, primary_key=True, server_default=func.gen_random_uuid())
     topic: Mapped[str] = mapped_column(VARCHAR(1024), nullable=False)
     style: Mapped[str] = mapped_column(VARCHAR(1024), nullable=False)
     max_tokens: Mapped[int] = mapped_column(Integer, nullable=False)
     pages_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[datetime.datetime] = mapped_column(DATETIME, nullable=False, server_default=func.current_timestamp())
     sites: Mapped[list[Site]] = relationship('Site', back_populates='generate', uselist=True)
     
     
 class Site(Base):
     __tablename__ = 'site'
     
-    id: Mapped[UUID] = mapped_column(SQLAlchemyUUID, primary_key=True)
+    id: Mapped[UUID] = mapped_column(SQLAlchemyUUID, primary_key=True, server_default=func.gen_random_uuid())
     status: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
     html: Mapped[str] = mapped_column(Text, nullable=True)
     generate_id: Mapped[UUID] = mapped_column(SQLAlchemyUUID, ForeignKey('generate.id'))

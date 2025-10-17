@@ -1,0 +1,2 @@
+class FailedTitleGeneration(Exception):
+    pass
