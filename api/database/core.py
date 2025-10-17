@@ -15,7 +15,7 @@ class Base(DeclarativeBase):
 
 
 sync_engine = create_engine(Config.DB_URL)
-async_engine = create_async_engine(settings.DB_URL)
+async_engine = create_async_engine(Config.DB_URL)
 
 
 create_session = sessionmaker(

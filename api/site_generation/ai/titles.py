@@ -4,6 +4,13 @@ from logs import logger
 from site_generation.exceptions import FailedTitleGeneration
 
 
+
+client = AsyncOpenAI(
+    base_url=Config.LLM_PROVIDER_URL,
+    api_key=Config.LLM_API_KEY,
+)
+
+
 def title_prompt(topic: str, style: str, num: int, retry: int = 3) -> str:
     prompt = f"""
     You are an expert in creating SEO-optimized titles that are engaging, unique, and relevant to the given topic and style.
@@ -57,14 +64,9 @@ def title_prompt(topic: str, style: str, num: int, retry: int = 3) -> str:
     return prompt
 
 
-# 1. Initialize the OpenAI client
-client = AsyncOpenAI(
-    base_url=Config.LLM_PROVIDER_URL,
-    api_key=Config.LLM_API_KEY,
-)
-
-
-async def generate_titles(topic: str, style: str, num: int, retry: int = 3) -> list[str]:
+async def generate_titles(
+    topic: str, style: str, num: int, retry: int = 3
+) -> list[str]:
     """
         Generate titles for given topic
     """
@@ -90,4 +92,5 @@ async def generate_titles(topic: str, style: str, num: int, retry: int = 3) -> l
             logger.warning('Something went wrong during title generation')
             logger.exception(e)
     # If titles were not generated, raise exception
+    logger.error(f'Failed to generate title...')
     raise FailedTitleGeneration()

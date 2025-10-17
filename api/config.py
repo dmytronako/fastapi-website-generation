@@ -29,4 +29,3 @@ for field in VALIDATION_FIELDS:
             application environment variables. Shutting down the application...
             '''
         )
-    

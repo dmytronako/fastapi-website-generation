@@ -13,12 +13,15 @@ router = APIRouter()
 @router.post('/generate', response_model=GenerateResponseModel)
 async def generate(
     payload: GenerateBodyModel, async_db_session: AsyncDBSession
-) -> str:
+) -> list[str]:
     # Put request into DB
     await create_generate_request(payload, async_db_session=async_db_session)
     titles = await generate_titles(
         payload.topic, payload.style, payload.pages_count, retry=3
     )
+    # Here some logic for generation of sites itself must be presented
+    # so far, just return titles
+    return titles
 
 
 @router.get('/site/{site_id}')

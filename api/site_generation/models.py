@@ -67,5 +67,5 @@ class Site(Base):
     id: Mapped[UUID] = mapped_column(SQLAlchemyUUID, primary_key=True, server_default=func.gen_random_uuid())
     status: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
     html: Mapped[str] = mapped_column(Text, nullable=True)
-    generate_id: Mapped[UUID] = mapped_column(SQLAlchemyUUID, ForeignKey('generate.id'))
+    generate_id: Mapped[UUID] = mapped_column(SQLAlchemyUUID, ForeignKey('generate.id'), index=True)
     generate: Mapped[Generate] = relationship('Generate', back_populates='sites')
