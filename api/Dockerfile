@@ -8,8 +8,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /api
 
 # Install system dependencies and Python dependencies
-COPY requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir api/wheels -r requirements.txt
+COPY ./requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /api/wheels -r requirements.txt
 
 FROM python:3.12-slim as runner
 
