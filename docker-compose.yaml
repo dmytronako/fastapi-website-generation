@@ -4,7 +4,11 @@ services:
       context: ./api
     container_name: fastapi-application
     environment:
-      PORT: 8000
+      - DB_URL=${DB_URL}
+      - LLM_PROVIDER_URL=${LLM_PROVIDER_URL}
+      - LLM_MODEL=${LLM_MODEL}
+      - LLM_API_KEY=${LLM_API_KEY}
+
     ports:
       - '8000:8000'
     restart: "no"
